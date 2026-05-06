@@ -86,7 +86,7 @@ Each row represents a unique customer session.
 | # | Finding | Key Number |
 |---|---------|------------|
 | 🔻 | Overall cart abandonment rate | **65.15%** across 25,000 sessions |
-| 🔻 | Biggest funnel drop — Cart → Checkout | **−50.4%** — 8,117 customers lost at one step |
+| 🔻 | Biggest funnel drop — Cart → Checkout | **−57.4%** — 9,207 customers lost at one step |
 | 🌍 | North region abandonment rate | **83.14%** vs West at 46.72% — a 36pp gap |
 | 💰 | Total net lost revenue | **₹1.86 Crore** from 10,501 abandoned sessions |
 | 🏷️ | Discount vs abandonment correlation | **r = 0.006** — discounts have zero effect |
