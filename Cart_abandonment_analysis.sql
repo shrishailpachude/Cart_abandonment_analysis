@@ -101,27 +101,21 @@ where s.unit_price > st.mean_price + 3* st.std_price
  
  
  -- No outliers in Revenue
- with ranking as
-(select revenue,ntile(4) over(order by revenue) as quartile
+ with stats as 
+(select
+    product_category,
+    avg(revenue)             as mean_rev,
+    stddev(revenue)          as std_rev
 from sales
-where revenue > 0),
-
-Qtl as 
-(select max(case when quartile = 1 then revenue end) as Q1,
-       max(case when quartile = 3 then revenue end) as Q3
-from ranking),
-
-Bounds as
-(select Q1,Q3,(Q3-Q1) as IQR,
-      Q1-1.5*(Q3-Q1) as lower_bound,
-      Q3+1.5*(Q3-Q1) as upper_bound
-from qtl)
-
-select *
-from sales
-cross join bounds
-where revenue < lower_bound
- or revenue > upper_bound;
+where revenue > 0
+group by product_category)
+  
+select
+    s.*,st.mean_rev,st.std_rev
+from sales s
+join stats st using (product_category)
+where s.revenue > mean_rev + 3* std_rev
+or s.revenue < mean_rev - 3* std_rev;
  
                                               
                                               -- Data Analysis
