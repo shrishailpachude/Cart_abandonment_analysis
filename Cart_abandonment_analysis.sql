@@ -79,28 +79,25 @@ select *
 from cte 
 where rn>1;
 
+
 -- Checking outliers 
--- No outliers in Unit_price
-with ranking as
-(select unit_price,ntile(4) over(order by unit_price) as quartile
-from sales),
-
-Qtl as 
-(select max(case when quartile = 1 then unit_price end) as Q1,
-       max(case when quartile = 3 then unit_price end) as Q3
-from ranking),
-
-Bounds as
-(select Q1,Q3,(Q3-Q1) as IQR,
-      Q1-1.5*(Q3-Q1) as lower_bound,
-      Q3+1.5*(Q3-Q1) as upper_bound
-from qtl)
-
-select *
-from sales
-cross join bounds
-where unit_price < lower_bound
- or unit_price > upper_bound;
+-- No outliers in Unit_price (Normal distribution of price)
+with stats as 
+(select
+    product_category,
+    avg(unit_price)    as mean_price,
+    stddev(unit_price) as std_price
+  from sales
+  group by product_category
+)
+select
+  s.product_category,
+  s.unit_price,
+  st.mean_price,st.std_price
+from sales s
+join stats st using (product_category)
+where s.unit_price > st.mean_price + 3* st.std_price
+ or s.unit_price < st.mean_price - 3* st.std_price;
  
  
  -- No outliers in Revenue
