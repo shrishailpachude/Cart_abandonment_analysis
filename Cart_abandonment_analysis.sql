@@ -88,8 +88,8 @@ with stats as
     avg(unit_price)    as mean_price,
     stddev(unit_price) as std_price
   from sales
-  group by product_category
-)
+  group by product_category)
+	
 select
   s.product_category,
   s.unit_price,
